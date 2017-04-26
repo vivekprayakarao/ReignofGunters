@@ -1,0 +1,8 @@
+prefix=/home/vivek/project6_ws/install
+
+Name: adventure_recognition
+Description: Description of adventure_recognition
+Version: 0.1.0
+Cflags: 
+Libs: -L/home/vivek/project6_ws/install/lib 
+Requires: 

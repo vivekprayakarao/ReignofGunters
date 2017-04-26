@@ -1,0 +1,8 @@
+prefix=/home/vivek/project6_ws/install
+
+Name: adventure_arm_description
+Description: Description of adventure_arm_description
+Version: 0.3.3
+Cflags: 
+Libs: -L/home/vivek/project6_ws/install/lib 
+Requires: 

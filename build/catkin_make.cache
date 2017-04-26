@@ -1,0 +1,2 @@
+project_6/adventure_recognition:project_6/adventure_simulator/adventure_description:project_6/adventure_simulator/adventure_gazebo:project_6/adventure_simulator/adventure_teleop
+-DCATKIN_DEVEL_PREFIX=/home/vivek/project6_ws/devel -DCMAKE_INSTALL_PREFIX=/home/vivek/project6_ws/install -G Unix Makefiles

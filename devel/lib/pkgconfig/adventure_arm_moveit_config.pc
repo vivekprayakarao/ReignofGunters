@@ -1,0 +1,8 @@
+prefix=/home/vivek/project6_ws/devel
+
+Name: adventure_arm_moveit_config
+Description: Description of adventure_arm_moveit_config
+Version: 0.3.3
+Cflags: 
+Libs: -L/home/vivek/project6_ws/devel/lib 
+Requires: 

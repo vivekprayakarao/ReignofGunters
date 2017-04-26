@@ -1,0 +1,1 @@
+/usr/bin/c++  -fPIC   -shared -Wl,-soname,libgtest_main.so -o libgtest_main.so CMakeFiles/gtest_main.dir/src/gtest_main.cc.o  -L/home/vivek/project6_ws/build/gtest/src -lpthread libgtest.so -lpthread -Wl,-rpath,/home/vivek/project6_ws/build/gtest/src:/home/vivek/project6_ws/build/gtest 
