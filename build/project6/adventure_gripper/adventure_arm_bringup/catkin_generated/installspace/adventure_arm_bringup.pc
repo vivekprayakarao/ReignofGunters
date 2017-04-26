@@ -1,8 +1,0 @@
-prefix=/home/vivek/project6_ws/install
-
-Name: adventure_arm_bringup
-Description: Description of adventure_arm_bringup
-Version: 0.3.3
-Cflags: 
-Libs: -L/home/vivek/project6_ws/install/lib 
-Requires: 

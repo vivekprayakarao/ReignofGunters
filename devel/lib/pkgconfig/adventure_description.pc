@@ -1,8 +1,0 @@
-prefix=/home/vivek/project6_ws/devel
-
-Name: adventure_description
-Description: Description of adventure_description
-Version: 0.1.0
-Cflags: 
-Libs: -L/home/vivek/project6_ws/devel/lib 
-Requires: 
