@@ -1,0 +1,8 @@
+prefix=/home/vivek/catkin_ws2/devel
+
+Name: adventure_arm_bringup
+Description: Description of adventure_arm_bringup
+Version: 0.3.3
+Cflags: 
+Libs: -L/home/vivek/catkin_ws2/devel/lib 
+Requires: 

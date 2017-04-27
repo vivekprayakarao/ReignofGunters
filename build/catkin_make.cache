@@ -1,0 +1,2 @@
+project_6/adventure_bringup:project_6/adventure_gripper/adventure_arm_bringup:project_6/adventure_gripper/adventure_arm_description:project_6/adventure_gripper/adventure_arm_moveit_config:project_6/adventure_recognition:project_6/adventure_simulator/adventure_description:project_6/adventure_simulator/adventure_gazebo:project_6/adventure_simulator/adventure_teleop
+-DCATKIN_DEVEL_PREFIX=/home/vivek/catkin_ws2/devel -DCMAKE_INSTALL_PREFIX=/home/vivek/catkin_ws2/install -G Unix Makefiles

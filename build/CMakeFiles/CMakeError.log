@@ -1,0 +1,53 @@
+Determining if the pthread_create exist failed with the following output:
+Change Dir: /home/vivek/catkin_ws2/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec2660128032/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec2660128032.dir/build.make CMakeFiles/cmTryCompileExec2660128032.dir/build
+make[1]: Entering directory `/home/vivek/catkin_ws2/build/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/vivek/catkin_ws2/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec2660128032.dir/CheckSymbolExists.c.o
+/usr/bin/cc    -o CMakeFiles/cmTryCompileExec2660128032.dir/CheckSymbolExists.c.o   -c /home/vivek/catkin_ws2/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+Linking C executable cmTryCompileExec2660128032
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec2660128032.dir/link.txt --verbose=1
+/usr/bin/cc       CMakeFiles/cmTryCompileExec2660128032.dir/CheckSymbolExists.c.o  -o cmTryCompileExec2660128032 -rdynamic 
+CMakeFiles/cmTryCompileExec2660128032.dir/CheckSymbolExists.c.o: In function `main':
+CheckSymbolExists.c:(.text+0x16): undefined reference to `pthread_create'
+collect2: error: ld returned 1 exit status
+make[1]: *** [cmTryCompileExec2660128032] Error 1
+make[1]: Leaving directory `/home/vivek/catkin_ws2/build/CMakeFiles/CMakeTmp'
+make: *** [cmTryCompileExec2660128032/fast] Error 2
+
+File /home/vivek/catkin_ws2/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <pthread.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef pthread_create
+  return ((int*)(&pthread_create))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
+Determining if the function pthread_create exists in the pthreads failed with the following output:
+Change Dir: /home/vivek/catkin_ws2/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec4006778588/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec4006778588.dir/build.make CMakeFiles/cmTryCompileExec4006778588.dir/build
+make[1]: Entering directory `/home/vivek/catkin_ws2/build/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/vivek/catkin_ws2/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec4006778588.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create   -o CMakeFiles/cmTryCompileExec4006778588.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.2/Modules/CheckFunctionExists.c
+Linking C executable cmTryCompileExec4006778588
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec4006778588.dir/link.txt --verbose=1
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create    CMakeFiles/cmTryCompileExec4006778588.dir/CheckFunctionExists.c.o  -o cmTryCompileExec4006778588 -rdynamic -lpthreads 
+/usr/bin/ld: cannot find -lpthreads
+collect2: error: ld returned 1 exit status
+make[1]: *** [cmTryCompileExec4006778588] Error 1
+make[1]: Leaving directory `/home/vivek/catkin_ws2/build/CMakeFiles/CMakeTmp'
+make: *** [cmTryCompileExec4006778588/fast] Error 2
+
+

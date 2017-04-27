@@ -1,0 +1,8 @@
+prefix=/home/vivek/catkin_ws2/devel
+
+Name: adventure_description
+Description: Description of adventure_description
+Version: 0.1.0
+Cflags: 
+Libs: -L/home/vivek/catkin_ws2/devel/lib 
+Requires: 

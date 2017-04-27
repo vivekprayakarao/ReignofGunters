@@ -1,0 +1,8 @@
+prefix=/home/vivek/catkin_ws2/install
+
+Name: adventure_teleop
+Description: Description of adventure_teleop
+Version: 0.1.0
+Cflags: 
+Libs: -L/home/vivek/catkin_ws2/install/lib 
+Requires: 

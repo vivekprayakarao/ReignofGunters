@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/vivek/catkin_ws2/devel/setup.sh
