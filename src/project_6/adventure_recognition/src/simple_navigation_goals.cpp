@@ -17,6 +17,7 @@ double x_waypoint3 = 0.0 ;
 double y_waypoint3= 0.0;
 
 bool goalReached = false;
+
  int main(int argc, char** argv){
    ros::init(argc, argv, "map_navigation_node");
    ros::NodeHandle n;
