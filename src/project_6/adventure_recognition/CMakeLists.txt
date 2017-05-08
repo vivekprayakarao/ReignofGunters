@@ -27,9 +27,9 @@ include_directories(
 )
 
 include_directories(${OpenCV_INCLUDE_DIRS})
-
+message(STATUS "OpenCV_LIBS = ${OpenCV_LIBS}")
 add_executable(simple_navigation_goals src/simple_navigation_goals.cpp)
 target_link_libraries(simple_navigation_goals ${catkin_LIBRARIES})
 
-add_executable(objrec src/object_recognition.cpp)
-target_link_libraries(objrec ${catkin_LIBRARIES} ${OpenCV_LIBS} ${opencv_nonfree})
+add_executable(objrec src/obj_recog.cpp)
+target_link_libraries(objrec ${catkin_LIBRARIES} ${OpenCV_LIBS})
