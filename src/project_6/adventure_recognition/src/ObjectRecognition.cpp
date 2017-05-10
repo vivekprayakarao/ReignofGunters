@@ -137,8 +137,7 @@ std::vector<Point2f> ObjectRecognition::getBBox(const Mat & img_scene, const std
   }
   else
   {
-	  std::cout << "Not Enough Matches" << endl;
-          return false;
+        return false;
   }
  }
 
