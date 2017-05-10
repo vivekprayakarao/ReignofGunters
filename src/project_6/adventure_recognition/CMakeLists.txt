@@ -36,8 +36,14 @@ include_directories(include)
 #add_executable(objrec src/object_recognition.cpp)
 #target_link_libraries(objrec ${OpenCV_LIBS} ${catkin_LIBRARIES})
 
-add_executable(objectrecog src/ObjectRecognition.cpp)
-target_link_libraries(objectrecog ${OpenCV_LIBS} ${catkin_LIBRARIES})
+add_library(objrec
+  src/ObjectRecognition.cpp
+)
+
+target_link_libraries(objrec ${OpenCV_LIBS} ${catkin_LIBRARIES})
+
+add_executable(adventurerecog src/AdventureRecognition.cpp)
+target_link_libraries(adventurerecog objrec ${catkin_LIBRARIES})
 
 add_executable(simple_navigation_goals src/simple_navigation_goals.cpp)
 target_link_libraries(simple_navigation_goals ${catkin_LIBRARIES})
