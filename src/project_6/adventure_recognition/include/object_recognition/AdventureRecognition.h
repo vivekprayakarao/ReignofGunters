@@ -21,6 +21,7 @@ ros::Publisher vel_pub;
 bool process_image;
 bool bottle_positioned_correctly;
 bool attack_now;
+float init_error;
 
 public:
 AdventureRecognition(ros::NodeHandle n_);

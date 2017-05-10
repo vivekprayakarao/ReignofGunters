@@ -11,6 +11,7 @@ AdventureRecognition::AdventureRecognition(ros::NodeHandle n_)
     process_image = true; //For now
     bottle_positioned_correctly = false;
     attack_now = false;
+    init_error = 1;
 
     try {
          this->tf_listener_odom_footprint.waitForTransform( "/odom","/base_footprint",ros::Time(0), ros::Duration(20.0) );
@@ -53,11 +54,21 @@ void AdventureRecognition::imageCb(const sensor_msgs::ImageConstPtr& msg)
           cv::imshow(OPENCV_WINDOW, objrec.img_matches);
           cv::waitKey(3);
           //Code for checking Bottle Positioned Correctly
-           float err = bbox_centroid[0] - (cv_ptr->image.cols) / 2;
-           ROS_INFO("The error is %f", err);
+
+           if(bbox_centroid[0] - (cv_ptr->image.cols) / 2 < 0)
+		init_error = 1;
+           else
+                init_error = -1;
+
+           //ROS_INFO("The error is %f", init_err);
  
-          if (err > 20 && !bottle_positioned_correctly)
+           twist_msg.linear.x = 0.1;
+      	   twist_msg.angular.z = 0;
+           vel_pub.publish(twist_msg);
+
+          /*if (err > 50 && !bottle_positioned_correctly)
 	  {
+             while (ros::duration)
              twist_msg.linear.x = 0;
       	     twist_msg.angular.z = kw * err;
              vel_pub.publish(twist_msg);
@@ -68,14 +79,14 @@ void AdventureRecognition::imageCb(const sensor_msgs::ImageConstPtr& msg)
              twist_msg.linear.x = 0.1;
       	     twist_msg.angular.z = 0;
              vel_pub.publish(twist_msg);            
-          }
+          }*/
 
        }
        else 
        {
           //Sign of velocity should change
           twist_msg.linear.x = 0;
-      	  twist_msg.angular.z = 1;
+      	  twist_msg.angular.z = 0.1 * init_error;
           vel_pub.publish(twist_msg);
        }
     }
