@@ -1,56 +1,15 @@
 
 #include "object_recognition/ObjectRecognition.h"
 
-ObjectRecognition::ObjectRecognition(ros::NodeHandle n_)
-    : it_(n_)
+ObjectRecognition::ObjectRecognition()
 {
-    this->nh_ = n_;
-    // Subscrive to input video feed and publish output video feed
-    image_sub_ = it_.subscribe("/camera/image_raw", 1,
-      &ObjectRecognition::imageCb, this);
-    // image_pub_ = it_.advertise("/image_converter/output_video", 1);
-
     cv::namedWindow(OPENCV_WINDOW);
     setObjectKeyPoints();
-    processImage = false;
 }
 
 ObjectRecognition::~ObjectRecognition()
 {
    cv::destroyWindow(OPENCV_WINDOW);
-}
-
-void ObjectRecognition::imageCb(const sensor_msgs::ImageConstPtr& msg)
-{
-    cv_bridge::CvImagePtr cv_ptr;
-    try
-    {
-      cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::MONO8);
-    }
-    catch (cv_bridge::Exception& e)
-    {
-      ROS_ERROR("cv_bridge exception: %s", e.what());
-      return;
-    }
-
-    /*// Draw an example circle on the video stream
-    if (cv_ptr->image.rows > 60 && cv_ptr->image.cols > 60)
-      cv::circle(cv_ptr->image, cv::Point(50, 50), 10, CV_RGB(255,0,0));*/
-   
-    if (processImage)
-    {
-       std::vector<float> bbox_centroid;
-       if (findMatchingFeatures(cv_ptr->image, bbox_centroid))
-       {
-         // Update GUI Window
-          cv::imshow(OPENCV_WINDOW, img_matches);
-          cv::waitKey(3);
-       }
-       //else show a blank screen?
-    }
-
-    // Output modified video stream
-    //image_pub_.publish(cv_ptr->toImageMsg());
 }
 
 void ObjectRecognition::setObjectKeyPoints()
@@ -100,7 +59,7 @@ std::vector<Point2f> ObjectRecognition::getBBox(const Mat & img_scene, const std
 
  bool ObjectRecognition::findMatchingFeatures(Mat img_scene, std::vector<float>& bbox_centroid) //TODO: Make a struct
 {
-  cv::initModule_nonfree();
+  //cv::initModule_nonfree();
 
   //-- Step 1: Detect the keypoints in the scene using SIFT Detector
 
@@ -140,13 +99,4 @@ std::vector<Point2f> ObjectRecognition::getBBox(const Mat & img_scene, const std
         return false;
   }
  }
-
-int main(int argc, char** argv)
-{
-  ros::init(argc, argv, "object_recognition");
-  ros::NodeHandle n;
-  ObjectRecognition objrec(n);
-  ros::spin();
-  return 0;
-}
 
