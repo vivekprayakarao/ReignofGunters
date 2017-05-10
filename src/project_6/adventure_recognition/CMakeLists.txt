@@ -13,6 +13,7 @@ find_package(catkin REQUIRED COMPONENTS
   image_transport
   rospy
   roscpp
+  tf
 )
 
 find_package(OpenCV REQUIRED)
@@ -47,4 +48,4 @@ target_link_libraries(adventurerecog objrec ${catkin_LIBRARIES})
 
 add_executable(simple_navigation_goals src/simple_navigation_goals.cpp)
 target_link_libraries(simple_navigation_goals ${catkin_LIBRARIES})
->>>>>>> 3bb1d4dc6310ad2a358b57ee5629ca6446d6d801
+
