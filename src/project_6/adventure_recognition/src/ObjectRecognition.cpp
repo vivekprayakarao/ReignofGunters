@@ -14,7 +14,7 @@ ObjectRecognition::~ObjectRecognition()
 
 void ObjectRecognition::setObjectKeyPoints()
  {
-    std::string obj_path = (ros::package::getPath("adventure_recognition") + "/images/train/object.jpg");
+    std::string obj_path = (ros::package::getPath("adventure_recognition") + "/images/train/bottle_0.jpg");
     img_object = imread( obj_path, CV_LOAD_IMAGE_GRAYSCALE );
     detector.detect( img_object, keypoints_object );
     extractor.compute( img_object, keypoints_object, descriptors_object );

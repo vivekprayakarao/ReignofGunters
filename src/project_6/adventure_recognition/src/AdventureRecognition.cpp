@@ -5,7 +5,7 @@ AdventureRecognition::AdventureRecognition(ros::NodeHandle n_)
 {
     this->nh_ = n_;
     // Subscribe to input video feed and publish output video feed
-    image_sub_ = it_.subscribe("/camera/image_raw", 1,
+    image_sub_ = it_.subscribe("/camera/rgb/image_raw", 1,
       &AdventureRecognition::imageCb, this);
     // image_pub_ = it_.advertise("/image_converter/output_video", 1);
     process_image = true; //For now
@@ -60,14 +60,14 @@ void AdventureRecognition::imageCb(const sensor_msgs::ImageConstPtr& msg)
 	  {
              twist_msg.linear.x = 0;
       	     twist_msg.angular.z = kw * err;
-             vel_pub.publish(msg);
+             vel_pub.publish(twist_msg);
           }
           else 
           {
              bottle_positioned_correctly = true;
              twist_msg.linear.x = 0.1;
       	     twist_msg.angular.z = 0;
-             vel_pub.publish(msg);            
+             vel_pub.publish(twist_msg);            
           }
 
        }
@@ -76,7 +76,7 @@ void AdventureRecognition::imageCb(const sensor_msgs::ImageConstPtr& msg)
           //Sign of velocity should change
           twist_msg.linear.x = 0;
       	  twist_msg.angular.z = 1;
-          vel_pub.publish(msg);
+          vel_pub.publish(twist_msg);
        }
     }
        //else show a blank screen - "Not Processing at the moment sort of message"
