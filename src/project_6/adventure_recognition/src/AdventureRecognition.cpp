@@ -12,7 +12,7 @@ AdventureRecognition::AdventureRecognition(ros::NodeHandle n_)
     //bottle_positioned_correctly = false;
     bottle_is_near = false;
     attack_now = false;
-    init_error = 1;
+    init_error = -1;
 
     try {
          this->tf_listener_odom_footprint.waitForTransform( "/odom","/base_footprint",ros::Time(0), ros::Duration(50.0) );
