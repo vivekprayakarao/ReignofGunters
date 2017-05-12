@@ -14,10 +14,18 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   roscpp
   tf
+  moveit_core
+  moveit_ros_planning
+  moveit_ros_planning_interface
+  pluginlib
+  cmake_modules
 )
 
 find_package(OpenCV REQUIRED)
 
+find_package(Boost REQUIRED system filesystem date_time thread)
+
+find_package(Eigen REQUIRED)
 ###################################
 ## catkin specific configuration ##
 ###################################
@@ -31,6 +39,8 @@ include_directories(
   ${OpenCV_INCLUDE_DIRS}
   ${catkin_INCLUDE_DIRS}
 )
+
+include_directories(SYSTEM ${Boost_INCLUDE_DIR} ${EIGEN_INCLUDE_DIRS})
 
 include_directories(include)
 
