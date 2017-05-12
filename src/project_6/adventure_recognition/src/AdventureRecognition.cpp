@@ -71,7 +71,6 @@ void AdventureRecognition::imageCb(const sensor_msgs::ImageConstPtr& msg)
 	   vel_pub.publish(twist_msg);
            //ROS_INFO("The error is %f", init_err);
 
-
            if (!bottle_is_near)
            {
               twist_msg.linear.x = 0.1;
@@ -120,6 +119,24 @@ void AdventureRecognition::setupArmTrajectory()
   target_pose3.position.x = 0.283182;
   target_pose3.position.y = -0.135952;
   target_pose3.position.z =  0.103461;
+
+  //Pose 4
+  target_pose4.orientation.x =  0.922849;
+  target_pose4.orientation.y = 0.00235894;
+  target_pose4.orientation.z = -0.385154;
+  target_pose4.orientation.w = 0.00098235;
+  target_pose4.position.x = 0.166023;
+  target_pose4.position.y = 0.000541269;
+  target_pose4.position.z =  0.273873;
+
+  
+}
+
+void AdventureRecognition::attacknow()
+{
+  ros::AsyncSpinner spinner(1);
+  spinner.start();
+  sleep(2.0);
 
   //Pose 4
   target_pose4.orientation.x =  0.922849;
