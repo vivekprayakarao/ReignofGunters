@@ -138,24 +138,6 @@ void AdventureRecognition::attacknow()
   spinner.start();
   sleep(2.0);
 
-  //Pose 4
-  target_pose4.orientation.x =  0.922849;
-  target_pose4.orientation.y = 0.00235894;
-  target_pose4.orientation.z = -0.385154;
-  target_pose4.orientation.w = 0.00098235;
-  target_pose4.position.x = 0.166023;
-  target_pose4.position.y = 0.000541269;
-  target_pose4.position.z =  0.273873;
-
-  
-}
-
-void AdventureRecognition::attacknow()
-{
-  ros::AsyncSpinner spinner(1);
-  spinner.start();
-  sleep(2.0);
-
   //moveit::planning_interface::MoveGroup group("arm");
   //moveit::planning_interface::PlanningSceneInterface planning_scene_interface;  
 
