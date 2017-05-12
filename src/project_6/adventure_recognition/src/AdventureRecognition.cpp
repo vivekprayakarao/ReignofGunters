@@ -14,22 +14,24 @@ AdventureRecognition::AdventureRecognition(ros::NodeHandle n_)
     init_error = 1;
 
     try {
-         this->tf_listener_odom_footprint.waitForTransform( "/odom","/base_footprint",ros::Time(0), ros::Duration(20.0) );
+         this->tf_listener_odom_footprint.waitForTransform( "/odom","/base_footprint",ros::Time(0), ros::Duration(50.0) );
      }
   catch (tf::TransformException &ex) {
             ROS_ERROR("[adventure_slam]: (wait) %s", ex.what());
             ros::Duration(1.0).sleep();
   }
 
-  this->vel_pub = nh_.advertise<geometry_msgs::Twist>("/cmd_vel_mux/input/navi", 5);
+  this->vel_pub = nh_.advertise<geometry_msgs::Twist>("/cmd_vel_mux/input/navi", 10);
 }
 
 void AdventureRecognition::imageCb(const sensor_msgs::ImageConstPtr& msg)
 {
+     geometry_msgs::Twist twist_msg;
+ 
     //cv_bridge::CvImagePtr cv_ptr;
    if (process_image) //Should be activated after a particular waypoint is attained
     {
-       geometry_msgs::Twist twist_msg;
+       
        float kw = 0.0001;
     try
     {
@@ -56,15 +58,14 @@ void AdventureRecognition::imageCb(const sensor_msgs::ImageConstPtr& msg)
           //Code for checking Bottle Positioned Correctly
 
            if(bbox_centroid[0] - (cv_ptr->image.cols) / 2 < 0)
-		init_error = 1;
+		init_error = -1;
            else
-                init_error = -1;
+                init_error = 1;
 
+	   twist_msg.linear.x = 0.1;
+	   twist_msg.angular.z = 0;
+	   vel_pub.publish(twist_msg);
            //ROS_INFO("The error is %f", init_err);
- 
-           twist_msg.linear.x = 0.1;
-      	   twist_msg.angular.z = 0;
-           vel_pub.publish(twist_msg);
 
           /*if (err > 50 && !bottle_positioned_correctly)
 	  {
@@ -86,7 +87,7 @@ void AdventureRecognition::imageCb(const sensor_msgs::ImageConstPtr& msg)
        {
           //Sign of velocity should change
           twist_msg.linear.x = 0;
-      	  twist_msg.angular.z = 0.1 * init_error;
+      	  twist_msg.angular.z = 0.2 * init_error;
           vel_pub.publish(twist_msg);
        }
     }
