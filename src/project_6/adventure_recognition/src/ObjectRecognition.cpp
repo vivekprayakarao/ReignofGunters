@@ -6,6 +6,7 @@ ObjectRecognition::ObjectRecognition()
 {
     cv::namedWindow(OPENCV_WINDOW);
     setObjectKeyPoints();
+    count = 0;
 }
 
 ObjectRecognition::~ObjectRecognition()
@@ -15,10 +16,18 @@ ObjectRecognition::~ObjectRecognition()
 
 void ObjectRecognition::setObjectKeyPoints()
  {
-    std::string obj_path = (ros::package::getPath("adventure_recognition") + "/images/train/bottle_1.jpg");
+    std::stringstream ss;
+    std::string s;
+    char c = count;
+    ss << c;
+    ss >> s;
+    //std::string s = std::to_string(count);
+    std::string sub_str = "/images/train/bottle_" + s + ".jpg";
+    std::string obj_path = (ros::package::getPath("adventure_recognition") + sub_str);
     img_object = imread( obj_path, CV_LOAD_IMAGE_GRAYSCALE );
     detector.detect( img_object, keypoints_object );
     extractor.compute( img_object, keypoints_object, descriptors_object );
+    count++;
  }
 
 std::vector<Point2f> ObjectRecognition::getBBox(const Mat & img_scene, const std::vector<KeyPoint> & keypoints_scene, const std::vector<DMatch> & good_matches, bool showMatches)
