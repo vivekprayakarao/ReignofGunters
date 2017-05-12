@@ -1,5 +1,6 @@
 
 #include "object_recognition/ObjectRecognition.h"
+#include <cmath>
 
 ObjectRecognition::ObjectRecognition()
 {
@@ -57,7 +58,7 @@ std::vector<Point2f> ObjectRecognition::getBBox(const Mat & img_scene, const std
     return scene_corners;
 }
 
- bool ObjectRecognition::findMatchingFeatures(Mat img_scene, std::vector<float>& bbox_centroid, float& area) //Modify area to diagonal length?
+ bool ObjectRecognition::findMatchingFeatures(Mat img_scene, std::vector<float>& bbox_centroid, float& diagonal)
 {
   //cv::initModule_nonfree();
 
@@ -92,7 +93,9 @@ std::vector<Point2f> ObjectRecognition::getBBox(const Mat & img_scene, const std
 	  std::vector<Point2f> bbox_corners = getBBox(img_scene, keypoints_scene, good_matches );
 	  bbox_centroid.push_back((bbox_corners[0].x + bbox_corners[2].x) / 2);
 	  bbox_centroid.push_back((bbox_corners[0].y + bbox_corners[2].y) / 2);
-          area = std::abs(bbox_corners[0].x - bbox_corners[2].x) * std::abs(bbox_corners[0].y - bbox_corners[2].y);
+          diagonal = std::sqrt(std::pow((bbox_corners[0].x - bbox_corners[2].x),2) + 
+                     std::pow(std::abs(bbox_corners[0].y - bbox_corners[2].y),2));
+          
           return true;
   }
   else

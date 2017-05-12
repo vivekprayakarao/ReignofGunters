@@ -31,7 +31,7 @@ public:
 ObjectRecognition();
 ~ObjectRecognition();
 //void imageCb(const sensor_msgs::ImageConstPtr& msg);
-bool findMatchingFeatures(Mat img_scene, std::vector<float>& bbox_centroid, float& area);
+bool findMatchingFeatures(Mat img_scene, std::vector<float>& bbox_centroid, float& diagonal);
 Mat img_matches;
 bool processImage;
 };

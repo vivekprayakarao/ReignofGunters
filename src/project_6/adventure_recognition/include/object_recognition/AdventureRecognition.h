@@ -15,7 +15,8 @@
 #include "object_recognition/ObjectRecognition.h"
 
 static const float bottle_centre_tol = 20; //pixels
-static const float bounding_box_size_thresh = 300000;
+//static const float bounding_box_size_thresh = 100000;
+static const float diagonal_size_thresh = 350;
 class AdventureRecognition {
 private:
 ros::NodeHandle nh_;

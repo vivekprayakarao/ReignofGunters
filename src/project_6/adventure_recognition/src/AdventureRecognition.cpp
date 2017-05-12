@@ -48,8 +48,8 @@ void AdventureRecognition::imageCb(const sensor_msgs::ImageConstPtr& msg)
     }
    
        std::vector<float> bbox_centroid;
-       float area;
-       if (objrec.findMatchingFeatures(cv_ptr->image, bbox_centroid, area))
+       float diagonal;
+       if (objrec.findMatchingFeatures(cv_ptr->image, bbox_centroid, diagonal))
        {
          //Check whether aspect ratio changed a lot, skip this frame
 
@@ -57,7 +57,8 @@ void AdventureRecognition::imageCb(const sensor_msgs::ImageConstPtr& msg)
           cv::imshow(OPENCV_WINDOW, objrec.img_matches);
           cv::waitKey(3);
           
-           if (area > bounding_box_size_thresh)
+           ROS_INFO("The diagonal is %f ", diagonal);
+           if (diagonal > diagonal_size_thresh)
                bottle_is_near = true;
 
           //Code for checking Bottle Positioned Correctly
@@ -77,6 +78,12 @@ void AdventureRecognition::imageCb(const sensor_msgs::ImageConstPtr& msg)
 	      twist_msg.angular.z = 0;
 	      vel_pub.publish(twist_msg);
            }
+           else 
+           {
+ 	     twist_msg.linear.x = 0;
+	     twist_msg.angular.z = 0;
+	     vel_pub.publish(twist_msg);
+           }
 
        }
        else 
@@ -88,6 +95,11 @@ void AdventureRecognition::imageCb(const sensor_msgs::ImageConstPtr& msg)
     }
        //else show a blank screen - "Not Processing at the moment sort of message"
 
+  if (bottle_is_near)
+  {
+    attacknow();
+    bottle_is_near = false;
+  }
     // Output modified video stream
     //image_pub_.publish(cv_ptr->toImageMsg());
 }
@@ -134,6 +146,7 @@ void AdventureRecognition::setupArmTrajectory()
 
 void AdventureRecognition::attacknow()
 {
+  ROS_INFO("The attack function called");
   ros::AsyncSpinner spinner(1);
   spinner.start();
   sleep(2.0);
@@ -188,11 +201,12 @@ int main(int argc, char** argv)
   ros::init(argc, argv, "adventure_recognition");
   ros::NodeHandle n;
   AdventureRecognition advrec(n);
-  if (advrec.bottle_is_near)
+  // It doesn't get called from here
+  /*if (advrec.bottle_is_near)
   {
     advrec.attacknow();
     advrec.bottle_is_near = false;
-  }
+  }*/
   
   ros::spin();
   return 0;
