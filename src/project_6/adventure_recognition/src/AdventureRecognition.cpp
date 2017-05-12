@@ -115,22 +115,22 @@ void AdventureRecognition::setupArmTrajectory()
   target_pose1.position.z =  0.273873;
 
   //Pose 2
-  target_pose2.orientation.x =  0.880169;
-  target_pose2.orientation.y = 0.136085;
-  target_pose2.orientation.z = -0.449396;
-  target_pose2.orientation.w = 0.0694798;
-  target_pose2.position.x = 0.29454;
-  target_pose2.position.y = 0.0743012;
-  target_pose2.position.z =  0.147096;
+  target_pose2.orientation.x =  0.912501;
+  target_pose2.orientation.y = 0.251016;
+  target_pose2.orientation.z = -0.311437;
+  target_pose2.orientation.w = 0.0856695;
+  target_pose2.position.x = 0.304445;
+  target_pose2.position.y = 0.145496;
+  target_pose2.position.z = 0.0913248 ;
   
   //Pose 3
-  target_pose3.orientation.x =  -0.844858;
-  target_pose3.orientation.y = 0.237063;
-  target_pose3.orientation.z = 0.461766;
-  target_pose3.orientation.w = 0.129571;
-  target_pose3.position.x = 0.283182;
-  target_pose3.position.y = -0.135952;
-  target_pose3.position.z =  0.103461;
+  target_pose3.orientation.x =  -0.907507;
+  target_pose3.orientation.y = 0.334166;
+  target_pose3.orientation.z = 0.238813;
+  target_pose3.orientation.w = 0.0879377;
+  target_pose3.position.x = 0.288953;
+  target_pose3.position.y = -0.19506;
+  target_pose3.position.z =  0.11154;
 
   //Pose 4
   target_pose4.orientation.x =  0.922849;
