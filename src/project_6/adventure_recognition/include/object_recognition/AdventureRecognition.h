@@ -47,6 +47,8 @@ geometry_msgs::Pose target_pose1, target_pose2, target_pose3, target_pose4;
 std::vector<std::vector<double> > waypoints;
 int waypt_num;
 bool attacked_once;
+
+actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> ac;
 public:
 AdventureRecognition(ros::NodeHandle n_);
 void imageCb(const sensor_msgs::ImageConstPtr& msg);

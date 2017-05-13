@@ -1,7 +1,7 @@
 #include "object_recognition/AdventureRecognition.h"
 
 AdventureRecognition::AdventureRecognition(ros::NodeHandle n_)
-    : it_(n_), group("arm")
+    : it_(n_), group("arm"), ac("move_base", true)
 {
     this->nh_ = n_;
     // Subscribe to input video feed and publish output video feed
@@ -127,7 +127,7 @@ void AdventureRecognition::imageCb(const sensor_msgs::ImageConstPtr& msg)
 bool AdventureRecognition::moveToGoal(double xGoal, double yGoal){
 
    //define a client for to send goal requests to the move_base server through a SimpleActionClient
-   actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> ac("move_base", true);
+   //actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> ac("move_base", true);
 
    //wait for the action server to come up
    while(!ac.waitForServer(ros::Duration(5.0))){
