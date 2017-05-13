@@ -8,10 +8,13 @@ AdventureRecognition::AdventureRecognition(ros::NodeHandle n_)
     image_sub_ = it_.subscribe("/camera/rgb/image_raw", 1,
       &AdventureRecognition::imageCb, this);
     // image_pub_ = it_.advertise("/image_converter/output_video", 1);
-    process_image = true; //For now
+    process_image = false;
     //bottle_positioned_correctly = false;
     bottle_is_near = false;
     attack_now = false;
+    move_now = true;
+    attacked_once = false;
+    waypt_num = 0;
     init_error = -1;
 
     try {
@@ -26,16 +29,21 @@ AdventureRecognition::AdventureRecognition(ros::NodeHandle n_)
   this->display_publisher = nh_.advertise<moveit_msgs::DisplayTrajectory>("/move_group/display_planned_path", 1, true);
 
   setupArmTrajectory();
+  setupWaypoints();
 }
 
 void AdventureRecognition::imageCb(const sensor_msgs::ImageConstPtr& msg)
 {
      geometry_msgs::Twist twist_msg;
+     if (move_now)
+     { 
+        ROS_INFO("Came in move now");
+        moveToGoal(waypoints[waypt_num][0], waypoints[waypt_num][1]);
+     }
  
     //cv_bridge::CvImagePtr cv_ptr;
    if (process_image) //Should be activated after a particular waypoint is attained
-    {
-       
+    {      
        float kw = 0.0001;
     try
     {
@@ -51,7 +59,7 @@ void AdventureRecognition::imageCb(const sensor_msgs::ImageConstPtr& msg)
        float diagonal;
        if (objrec.findMatchingFeatures(cv_ptr->image, bbox_centroid, diagonal))
        {
-         //Check whether aspect ratio changed a lot, skip this frame
+         //TODO:Check whether aspect ratio changed a lot, skip this frame
 
          // Update GUI Window
           cv::imshow(OPENCV_WINDOW, objrec.img_matches);
@@ -86,11 +94,22 @@ void AdventureRecognition::imageCb(const sensor_msgs::ImageConstPtr& msg)
            }
 
        }
-       else 
+       else
        {
-          twist_msg.linear.x = 0;
-      	  twist_msg.angular.z = 0.2 * init_error;
-          vel_pub.publish(twist_msg);
+          if (attacked_once)
+          {
+              attacked_once = false;
+              move_now = true;
+              process_image = false;
+              ROS_INFO("Change the bottle");
+              objrec.setObjectKeyPoints();
+          }
+          else
+          {
+             twist_msg.linear.x = 0;
+      	     twist_msg.angular.z = 0.23 * init_error;
+             vel_pub.publish(twist_msg);
+          }
        }
     }
        //else show a blank screen - "Not Processing at the moment sort of message"
@@ -98,11 +117,58 @@ void AdventureRecognition::imageCb(const sensor_msgs::ImageConstPtr& msg)
   if (bottle_is_near)
   {
     attacknow();
+    attacked_once = true;
     bottle_is_near = false;
   }
     // Output modified video stream
     //image_pub_.publish(cv_ptr->toImageMsg());
 }
+
+bool AdventureRecognition::moveToGoal(double xGoal, double yGoal){
+
+   //define a client for to send goal requests to the move_base server through a SimpleActionClient
+   actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> ac("move_base", true);
+
+   //wait for the action server to come up
+   while(!ac.waitForServer(ros::Duration(5.0))){
+      ROS_INFO("Waiting for the move_base action server to come up");
+   }
+
+   move_base_msgs::MoveBaseGoal goal;
+
+   //set up the frame parameters
+   goal.target_pose.header.frame_id = "map";
+   goal.target_pose.header.stamp = ros::Time::now();
+
+   /* moving towards the goal*/
+
+   goal.target_pose.pose.position.x =  xGoal;
+   goal.target_pose.pose.position.y =  yGoal;
+   goal.target_pose.pose.position.z =  0.0;
+   goal.target_pose.pose.orientation.x = 0.0;
+   goal.target_pose.pose.orientation.y = 0.0;
+   goal.target_pose.pose.orientation.z = 0.0;
+   goal.target_pose.pose.orientation.w = 1.0;
+
+   ROS_INFO("Sending goal location ...");
+   ac.sendGoal(goal);
+
+   ac.waitForResult();
+
+   if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED){
+      ROS_INFO("You have reached the destination");
+      this->process_image = true;
+      this->move_now = false;
+      this->waypt_num += 1;
+      return true;
+   }
+   else{
+      ROS_INFO("The robot failed to reach the destination");
+      return false;
+   }
+
+}
+
 void AdventureRecognition::setupArmTrajectory()
 {
   //Pose 1
@@ -141,6 +207,42 @@ void AdventureRecognition::setupArmTrajectory()
   target_pose4.position.y = 0.000541269;
   target_pose4.position.z =  0.273873;
 
+  
+}
+
+void AdventureRecognition::setupWaypoints()
+{
+   /** declare the coordinates of interest **/
+   double x_waypoint0 = 2.7;
+   double y_waypoint0= -1.6;
+   double x_waypoint1 = 0.4 ;
+   double y_waypoint1= 0.0;
+   double x_waypoint2 = 0.7 ;
+   double y_waypoint2= -1.6;
+   double x_waypoint3 = 0.0 ;
+   double y_waypoint3= 0.0;
+
+   std::vector<double> waypoint;
+   waypoint.push_back(x_waypoint0);
+   waypoint.push_back(y_waypoint0);
+   waypoints.push_back(waypoint);
+   waypoint.clear();
+
+  
+   waypoint.push_back(x_waypoint1);
+   waypoint.push_back(y_waypoint1);
+   waypoints.push_back(waypoint);
+   waypoint.clear();
+
+   waypoint.push_back(x_waypoint2);
+   waypoint.push_back(y_waypoint2);
+   waypoints.push_back(waypoint);
+   waypoint.clear();
+ 
+   waypoint.push_back(x_waypoint3);
+   waypoint.push_back(y_waypoint3);
+   waypoints.push_back(waypoint);
+   waypoint.clear();
   
 }
 

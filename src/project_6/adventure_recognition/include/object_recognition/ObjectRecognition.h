@@ -5,6 +5,8 @@
 #include <opencv2/nonfree/nonfree.hpp>
 #include <opencv2/features2d/features2d.hpp>
 #include <opencv2/calib3d/calib3d.hpp>
+#include <string>
+#include <sstream>
 
 using namespace cv;
 static const std::string OPENCV_WINDOW = "Matches found";
@@ -24,14 +26,17 @@ SiftDescriptorExtractor extractor;
 Mat img_object;
 //image_transport::Publisher image_pub_;
 
-void setObjectKeyPoints();
 std::vector<Point2f> getBBox(const Mat & img_scene, const std::vector<KeyPoint> & keypoints_scene, const std::vector<DMatch> & good_matches, bool showMatches = false);
+int count;
+//char* bottle_nums;
 
 public:
 ObjectRecognition();
 ~ObjectRecognition();
 //void imageCb(const sensor_msgs::ImageConstPtr& msg);
 bool findMatchingFeatures(Mat img_scene, std::vector<float>& bbox_centroid, float& diagonal);
+void setObjectKeyPoints();
+
 Mat img_matches;
 bool processImage;
 };
