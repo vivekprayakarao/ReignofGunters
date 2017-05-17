@@ -10,7 +10,7 @@
 
 using namespace cv;
 static const std::string OPENCV_WINDOW = "Matches found";
-size_t MIN_MATCH_COUNT = 10;
+size_t MIN_MATCH_COUNT = 15;
 
 class ObjectRecognition {
 private:
@@ -27,7 +27,7 @@ Mat img_object;
 //image_transport::Publisher image_pub_;
 
 std::vector<Point2f> getBBox(const Mat & img_scene, const std::vector<KeyPoint> & keypoints_scene, const std::vector<DMatch> & good_matches, bool showMatches = false);
-int count;
+//int count;
 //char* bottle_nums;
 
 public:
@@ -35,7 +35,7 @@ ObjectRecognition();
 ~ObjectRecognition();
 //void imageCb(const sensor_msgs::ImageConstPtr& msg);
 bool findMatchingFeatures(Mat img_scene, std::vector<float>& bbox_centroid, float& diagonal);
-void setObjectKeyPoints();
+void setObjectKeyPoints(int count);
 
 Mat img_matches;
 bool processImage;

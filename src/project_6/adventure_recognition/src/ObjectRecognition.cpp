@@ -6,8 +6,8 @@
 ObjectRecognition::ObjectRecognition()
 {
     cv::namedWindow(OPENCV_WINDOW);
-    setObjectKeyPoints();
-    count = 0;
+    setObjectKeyPoints(0);
+    //count = 0;
     /*bottle_nums = new char[4];
     bottle_nums[0] = '0';
     bottle_nums[1] = '1';
@@ -18,23 +18,36 @@ ObjectRecognition::ObjectRecognition()
 ObjectRecognition::~ObjectRecognition()
 {
    cv::destroyWindow(OPENCV_WINDOW);
+   //delete obj_paths;
 }
 
-void ObjectRecognition::setObjectKeyPoints()
+void ObjectRecognition::setObjectKeyPoints(int count)
  {
-    char bottle_nums[] = {'0', '1', '2', '\0'};
+    /*char bottle_nums[] = {'0', '1', '2', '\0'};
     std::stringstream ss;
     std::string s;
-    char c = bottle_nums[count];
+    char c = bottle_nums[count];*/
+    std::stringstream ss;
+    std::string s;
+    char c = count + '0';
     ss << c;
     ss >> s;
     //std::string s = std::to_string(count);
-    std::string sub_str = "/images/train/bottle_" + s + ".jpg";
-    std::string obj_path = (ros::package::getPath("adventure_recognition") + sub_str);
+    //std::string sub_str = "/images/train/bottle_" + s + ".jpg";
+    //std::string obj_path = (ros::package::getPath("adventure_recognition") + sub_str);
+
+    std::string obj_path;
+    ROS_INFO("count = %d", count);
+    if(count == 0)
+      obj_path = (ros::package::getPath("adventure_recognition") + "/images/train/bottle_0.jpg");
+    else if(count == 1)
+      obj_path = (ros::package::getPath("adventure_recognition") + "/images/train/bottle_1.jpg");
+    else
+      obj_path = (ros::package::getPath("adventure_recognition") + "/images/train/bottle_2.jpg");
+
     img_object = imread( obj_path, CV_LOAD_IMAGE_GRAYSCALE );
     detector.detect( img_object, keypoints_object );
     extractor.compute( img_object, keypoints_object, descriptors_object );
-    count++;
  }
 
 std::vector<Point2f> ObjectRecognition::getBBox(const Mat & img_scene, const std::vector<KeyPoint> & keypoints_scene, const std::vector<DMatch> & good_matches, bool showMatches)

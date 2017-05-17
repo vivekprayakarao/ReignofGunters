@@ -19,7 +19,7 @@
 
 static const float bottle_centre_tol = 20; //pixels
 //static const float bounding_box_size_thresh = 100000;
-static const float diagonal_size_thresh = 350;
+static const float diagonal_size_thresh = 380;
 class AdventureRecognition {
 private:
 ros::NodeHandle nh_;
@@ -47,6 +47,8 @@ geometry_msgs::Pose target_pose1, target_pose2, target_pose3, target_pose4;
 std::vector<std::vector<double> > waypoints;
 int waypt_num;
 bool attacked_once;
+
+int count;
 
 actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> ac;
 public:

@@ -16,6 +16,7 @@ AdventureRecognition::AdventureRecognition(ros::NodeHandle n_)
     attacked_once = false;
     waypt_num = 0;
     init_error = -1;
+    count = 1;
 
     try {
          this->tf_listener_odom_footprint.waitForTransform( "/odom","/base_footprint",ros::Time(0), ros::Duration(50.0) );
@@ -44,7 +45,8 @@ void AdventureRecognition::imageCb(const sensor_msgs::ImageConstPtr& msg)
     //cv_bridge::CvImagePtr cv_ptr;
    if (process_image) //Should be activated after a particular waypoint is attained
     {      
-       float kw = 0.0001;
+       //float kw = 0.0001;
+       ROS_INFO("Start Processing the Image");
     try
     {
       cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::MONO8);
@@ -102,12 +104,13 @@ void AdventureRecognition::imageCb(const sensor_msgs::ImageConstPtr& msg)
               move_now = true;
               process_image = false;
               ROS_INFO("Change the bottle");
-              objrec.setObjectKeyPoints();
+              objrec.setObjectKeyPoints(count);
+              count++;
           }
           else
           {
              twist_msg.linear.x = 0;
-      	     twist_msg.angular.z = 0.23 * init_error;
+      	     twist_msg.angular.z = 0.3 * init_error;
              vel_pub.publish(twist_msg);
           }
        }
@@ -219,6 +222,12 @@ void AdventureRecognition::setupWaypoints()
    double y_waypoint1= 0.0;
    double x_waypoint2 = 0.7 ;
    double y_waypoint2= -1.6;
+   /*double x_waypoint0 = 4.3;
+   double y_waypoint0= -1;
+   double x_waypoint1 = 4 ;
+   double y_waypoint1= 0.8;
+   double x_waypoint2 = 4.5 ;
+   double y_waypoint2= 2;*/
    double x_waypoint3 = 0.0 ;
    double y_waypoint3= 0.0;
 
@@ -272,29 +281,30 @@ void AdventureRecognition::attacknow()
   ROS_INFO("Visualizing plan 1 (pose goal) %s",success?"":"FAILED");    
 
   //sleep(5.0);
-  moveit_msgs::DisplayTrajectory display_trajectory;
+  //moveit_msgs::DisplayTrajectory display_trajectory;
   
-  if (1)
+  /*if (1)
   {
     ROS_INFO("Visualizing plan 1 (again)");    
     display_trajectory.trajectory_start = my_plan.start_state_;
     display_trajectory.trajectory.push_back(my_plan.trajectory_);
     display_publisher.publish(display_trajectory);
     sleep(5.0);
-  }
+  }*/
   
   // Moving to target poses
   group.setPoseTarget(target_pose1);
   group.move();
-  sleep(2.0);
+  sleep(3.0);
   group.setPoseTarget(target_pose2);
   group.move();
-  sleep(2.0);
+  sleep(3.0);
   group.setPoseTarget(target_pose3);
   group.move();
-  sleep(2.0);
+  sleep(3.0);
   group.setPoseTarget(target_pose4);
   group.move(); 
+  //sleep(5.0);
 
 }
 
