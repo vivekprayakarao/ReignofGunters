@@ -75,13 +75,13 @@ int main(int argc, char **argv)
   sleep(2.0);
 
   geometry_msgs::Pose target_pose2;
-  target_pose2.orientation.x =   0.977731;
-  target_pose2.orientation.y = 0.00749837;
-  target_pose2.orientation.z = -0.209723;
-  target_pose2.orientation.w = 0.00160636;
-  target_pose2.position.x = 0.345579;
-  target_pose2.position.y = 0.00437992;
-  target_pose2.position.z =   0.227893;
+  target_pose2.orientation.x =  0.880169;
+  target_pose2.orientation.y = 0.136085;
+  target_pose2.orientation.z = -0.449396;
+  target_pose2.orientation.w = 0.0694798;
+  target_pose2.position.x = 0.29454;
+  target_pose2.position.y = 0.0743012;
+  target_pose2.position.z =  0.147096;
   /*geometry_msgs::Pose target_pose2;
   target_pose2.orientation.x =  0.912501;
   target_pose2.orientation.y = 0.251016;
@@ -100,13 +100,13 @@ int main(int argc, char **argv)
   sleep(2.0);
 
   geometry_msgs::Pose target_pose3;
-  target_pose3.orientation.x =  -0.614298;
-  target_pose3.orientation.y = 0.00628162;
-  target_pose3.orientation.z = 0.789008;
-  target_pose3.orientation.w = 0.00807136;
-  target_pose3.position.x = 0.197341;
-  target_pose3.position.y = -0.00280982;
-  target_pose3.position.z =  0.133334;
+  target_pose3.orientation.x =  -0.844858;
+  target_pose3.orientation.y = 0.237063;
+  target_pose3.orientation.z = 0.461766;
+  target_pose3.orientation.w = 0.129571;
+  target_pose3.position.x = 0.283182;
+  target_pose3.position.y = -0.135952;
+  target_pose3.position.z =  0.103461;
   /*target_pose3.orientation.x =  -0.907507;
   target_pose3.orientation.y = 0.334166;
   target_pose3.orientation.z = 0.238813;
@@ -133,4 +133,3 @@ int main(int argc, char **argv)
   ros::shutdown();  
   return 0;
 }
-
