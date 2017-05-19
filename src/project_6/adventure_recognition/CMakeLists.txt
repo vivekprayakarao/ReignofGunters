@@ -56,6 +56,4 @@ target_link_libraries(objrec ${OpenCV_LIBS} ${catkin_LIBRARIES})
 add_executable(adventurerecog src/AdventureRecognition.cpp)
 target_link_libraries(adventurerecog objrec ${catkin_LIBRARIES})
 
-add_executable(simple_navigation_goals src/simple_navigation_goals.cpp)
-target_link_libraries(simple_navigation_goals ${catkin_LIBRARIES})
 
