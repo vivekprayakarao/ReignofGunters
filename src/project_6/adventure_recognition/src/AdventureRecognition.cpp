@@ -4,12 +4,12 @@ AdventureRecognition::AdventureRecognition(ros::NodeHandle n_)
     : it_(n_), group("arm"), ac("move_base", true)
 {
     this->nh_ = n_;
+
     // Subscribe to input video feed and publish output video feed
     image_sub_ = it_.subscribe("/camera/rgb/image_raw", 1,
       &AdventureRecognition::imageCb, this);
-    // image_pub_ = it_.advertise("/image_converter/output_video", 1);
+
     process_image = false;
-    //bottle_positioned_correctly = false;
     bottle_is_near = false;
     attack_now = false;
     move_now = true;
@@ -18,34 +18,23 @@ AdventureRecognition::AdventureRecognition(ros::NodeHandle n_)
     init_error = -1;
     count = 1;
 
-    try {
-         this->tf_listener_odom_footprint.waitForTransform( "/odom","/base_footprint",ros::Time(0), ros::Duration(50.0) );
-     }
-  catch (tf::TransformException &ex) {
-            ROS_ERROR("[adventure_slam]: (wait) %s", ex.what());
-            ros::Duration(1.0).sleep();
-  }
+    this->vel_pub = nh_.advertise<geometry_msgs::Twist>("/cmd_vel_mux/input/navi", 10);
+    this->display_publisher = nh_.advertise<moveit_msgs::DisplayTrajectory>("/move_group/display_planned_path", 1, true);
 
-  this->vel_pub = nh_.advertise<geometry_msgs::Twist>("/cmd_vel_mux/input/navi", 10);
-  this->display_publisher = nh_.advertise<moveit_msgs::DisplayTrajectory>("/move_group/display_planned_path", 1, true);
-
-  setupArmTrajectory();
-  setupWaypoints();
+    setupArmTrajectory();
+    setupWaypoints();
 }
 
 void AdventureRecognition::imageCb(const sensor_msgs::ImageConstPtr& msg)
 {
-     geometry_msgs::Twist twist_msg;
-     if (move_now)
-     { 
-        ROS_INFO("Came in move now");
-        moveToGoal(waypoints[waypt_num][0], waypoints[waypt_num][1]);
-     }
+   geometry_msgs::Twist twist_msg;
+   if (move_now)
+   { 
+       moveToGoal(waypoints[waypt_num][0], waypoints[waypt_num][1]);
+   }
  
-    //cv_bridge::CvImagePtr cv_ptr;
    if (process_image) //Should be activated after a particular waypoint is attained
     {      
-       //float kw = 0.0001;
        ROS_INFO("Start Processing the Image");
     try
     {
@@ -57,43 +46,37 @@ void AdventureRecognition::imageCb(const sensor_msgs::ImageConstPtr& msg)
       return;
     }
    
-       std::vector<float> bbox_centroid;
-       float diagonal;
-       if (objrec.findMatchingFeatures(cv_ptr->image, bbox_centroid, diagonal))
+    std::vector<float> bbox_centroid;
+    float diagonal;
+    if (objrec.findMatchingFeatures(cv_ptr->image, bbox_centroid, diagonal))
+    {
+       //TODO:Check whether aspect ratio changed a lot, skip this frame
+
+       // Update GUI Window
+       cv::imshow(OPENCV_WINDOW, objrec.img_matches);
+       cv::waitKey(3);
+         
+       if (diagonal > diagonal_size_thresh)
+           bottle_is_near = true;
+
+       //Try to orient such that the bottle is at the centre
+       if(bbox_centroid[0] - (cv_ptr->image.cols) / 2 < 0)
+           init_error = -1;
+       else
+           init_error = 1;
+
+       if (!bottle_is_near)
        {
-         //TODO:Check whether aspect ratio changed a lot, skip this frame
-
-         // Update GUI Window
-          cv::imshow(OPENCV_WINDOW, objrec.img_matches);
-          cv::waitKey(3);
-          
-           ROS_INFO("The diagonal is %f ", diagonal);
-           if (diagonal > diagonal_size_thresh)
-               bottle_is_near = true;
-
-          //Code for checking Bottle Positioned Correctly
-           if(bbox_centroid[0] - (cv_ptr->image.cols) / 2 < 0)
-		init_error = -1;
-           else
-                init_error = 1;
-
-	   twist_msg.linear.x = 0.1;
-	   twist_msg.angular.z = 0;
-	   vel_pub.publish(twist_msg);
-           //ROS_INFO("The error is %f", init_err);
-
-           if (!bottle_is_near)
-           {
-              twist_msg.linear.x = 0.1;
-	      twist_msg.angular.z = 0;
-	      vel_pub.publish(twist_msg);
-           }
-           else 
-           {
- 	     twist_msg.linear.x = 0;
-	     twist_msg.angular.z = 0;
-	     vel_pub.publish(twist_msg);
-           }
+          twist_msg.linear.x = 0.1;
+	  twist_msg.angular.z = 0;
+	  vel_pub.publish(twist_msg);
+       }
+       else 
+       {
+ 	 twist_msg.linear.x = 0;
+	 twist_msg.angular.z = 0;
+	 vel_pub.publish(twist_msg);
+       }
 
        }
        else
@@ -103,19 +86,20 @@ void AdventureRecognition::imageCb(const sensor_msgs::ImageConstPtr& msg)
               attacked_once = false;
               move_now = true;
               process_image = false;
-              ROS_INFO("Change the bottle");
+              ROS_INFO("Setting Object Keypoints for next bottle");
               objrec.setObjectKeyPoints(count);
               count++;
           }
           else
           {
+             //Try and Find the bottle by rotating in place
              twist_msg.linear.x = 0;
       	     twist_msg.angular.z = 0.3 * init_error;
              vel_pub.publish(twist_msg);
           }
        }
     }
-       //else show a blank screen - "Not Processing at the moment sort of message"
+    //TODO: else show a blank screen - "Not Processing at the moment sort of message"
 
   if (bottle_is_near)
   {
@@ -123,14 +107,9 @@ void AdventureRecognition::imageCb(const sensor_msgs::ImageConstPtr& msg)
     attacked_once = true;
     bottle_is_near = false;
   }
-    // Output modified video stream
-    //image_pub_.publish(cv_ptr->toImageMsg());
 }
 
 bool AdventureRecognition::moveToGoal(double xGoal, double yGoal){
-
-   //define a client for to send goal requests to the move_base server through a SimpleActionClient
-   //actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> ac("move_base", true);
 
    //wait for the action server to come up
    while(!ac.waitForServer(ros::Duration(5.0))){
@@ -222,12 +201,15 @@ void AdventureRecognition::setupWaypoints()
    double y_waypoint1= 0.0;
    double x_waypoint2 = 0.7 ;
    double y_waypoint2= -1.6;
+
+   /* Co-ordinates in the Corridor*/
    /*double x_waypoint0 = 4.3;
    double y_waypoint0= -1;
    double x_waypoint1 = 4 ;
    double y_waypoint1= 0.8;
    double x_waypoint2 = 4.5 ;
    double y_waypoint2= 2;*/
+
    double x_waypoint3 = 0.0 ;
    double y_waypoint3= 0.0;
 
@@ -262,9 +244,6 @@ void AdventureRecognition::attacknow()
   spinner.start();
   sleep(2.0);
 
-  //moveit::planning_interface::MoveGroup group("arm");
-  //moveit::planning_interface::PlanningSceneInterface planning_scene_interface;  
-
   // We can print the name of the reference frame for this robot.
   ROS_INFO("Reference frame: %s", group.getPlanningFrame().c_str());
   
@@ -278,7 +257,8 @@ void AdventureRecognition::attacknow()
   moveit::planning_interface::MoveGroup::Plan my_plan;
   bool success = group.plan(my_plan);
 
-  ROS_INFO("Visualizing plan 1 (pose goal) %s",success?"":"FAILED");    
+  // Uncomment Following code to visualize arm movement in Rviz
+  //ROS_INFO("Visualizing plan 1 (pose goal) %s",success?"":"FAILED");    
 
   //sleep(5.0);
   //moveit_msgs::DisplayTrajectory display_trajectory;
@@ -304,7 +284,6 @@ void AdventureRecognition::attacknow()
   sleep(3.0);
   group.setPoseTarget(target_pose4);
   group.move(); 
-  //sleep(5.0);
 
 }
 
@@ -312,14 +291,7 @@ int main(int argc, char** argv)
 {
   ros::init(argc, argv, "adventure_recognition");
   ros::NodeHandle n;
-  AdventureRecognition advrec(n);
-  // It doesn't get called from here
-  /*if (advrec.bottle_is_near)
-  {
-    advrec.attacknow();
-    advrec.bottle_is_near = false;
-  }*/
-  
+  AdventureRecognition advrec(n); 
   ros::spin();
   return 0;
 }

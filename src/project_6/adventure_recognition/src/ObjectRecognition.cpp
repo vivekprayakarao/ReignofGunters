@@ -7,37 +7,16 @@ ObjectRecognition::ObjectRecognition()
 {
     cv::namedWindow(OPENCV_WINDOW);
     setObjectKeyPoints(0);
-    //count = 0;
-    /*bottle_nums = new char[4];
-    bottle_nums[0] = '0';
-    bottle_nums[1] = '1';
-    bottle_nums[2] = '2';
-    bottle_nums[3] = '\0';*/
 }
 
 ObjectRecognition::~ObjectRecognition()
 {
    cv::destroyWindow(OPENCV_WINDOW);
-   //delete obj_paths;
 }
 
 void ObjectRecognition::setObjectKeyPoints(int count)
  {
-    /*char bottle_nums[] = {'0', '1', '2', '\0'};
-    std::stringstream ss;
-    std::string s;
-    char c = bottle_nums[count];*/
-    std::stringstream ss;
-    std::string s;
-    char c = count + '0';
-    ss << c;
-    ss >> s;
-    //std::string s = std::to_string(count);
-    //std::string sub_str = "/images/train/bottle_" + s + ".jpg";
-    //std::string obj_path = (ros::package::getPath("adventure_recognition") + sub_str);
-
     std::string obj_path;
-    ROS_INFO("count = %d", count);
     if(count == 0)
       obj_path = (ros::package::getPath("adventure_recognition") + "/images/train/bottle_0.jpg");
     else if(count == 1)
