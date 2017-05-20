@@ -291,7 +291,9 @@ int main(int argc, char** argv)
 {
   ros::init(argc, argv, "adventure_recognition");
   ros::NodeHandle n;
+  if (!n.getParam("adventure_recognition/diagonal_size_thresh", diagonal_size_thresh)) diagonal_size_thresh = 380;
   AdventureRecognition advrec(n); 
+
   ros::spin();
   return 0;
 }

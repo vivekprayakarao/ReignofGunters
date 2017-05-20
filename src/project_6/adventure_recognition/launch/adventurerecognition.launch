@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<launch>
+  <include file="$(find adventure_recognition)/launch/navigation.launch"/>
+
+
+  <node pkg="adventure_recognition" name="adventure_recognition" type="adventurerecog">
+  <param name="diagonal_size_thresh"              value="380"/>
+
+  </node>
+
+
+</launch>

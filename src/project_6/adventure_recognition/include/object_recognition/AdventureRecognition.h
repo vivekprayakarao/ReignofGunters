@@ -17,7 +17,7 @@
 #include "object_recognition/ObjectRecognition.h"
 #include<vector>
 
-static const float diagonal_size_thresh = 380;
+float diagonal_size_thresh;
 class AdventureRecognition {
 private:
 ros::NodeHandle nh_;

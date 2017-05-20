@@ -24,6 +24,6 @@ include_directories(SYSTEM ${Boost_INCLUDE_DIR} ${EIGEN_INCLUDE_DIRS})
 include_directories(${catkin_INCLUDE_DIRS})
 link_directories(${catkin_LIBRARY_DIRS})
 
-add_executable(arm_manipulation_node src/arm_manipulation_node.cpp)
-target_link_libraries(arm_manipulation_node ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+#add_executable(arm_manipulation_node src/arm_manipulation_node.cpp)
+#target_link_libraries(arm_manipulation_node ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 
